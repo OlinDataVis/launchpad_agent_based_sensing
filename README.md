@@ -1,2 +1,2 @@
-# launchpad_agent_based_sensing
+# Agent Based Sensory Creatures
 Base page for the Agent Based Sensory Creatures Launchpad
