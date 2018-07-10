@@ -62,6 +62,7 @@ class Creature():
         while pg.sprite.spritecollide(self.body,sprite_list,False,pg.sprite.collide_circle):
             self.body.rect.center = (randrange(sc_width), randrange(sc_height))
         self.body.rect.clamp_ip(sc_rect)
+        self.age = 0
         group.add(self.body)
         sprite_list.add(self.body)
         # self.states = ["EXPLORE", "EVADE", "HUNT"]
