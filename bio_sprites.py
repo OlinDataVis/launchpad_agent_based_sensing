@@ -6,7 +6,7 @@ import pygame as pg
 from random import choice, randrange
 
 class Blob(pg.sprite.Sprite):
-    def __init__(self, color, diameter, bgc, move=None, health=None):
+    def __init__(self, color, diameter, bgc, move=None, health=None, max_health=None):
         """ Initialize all objects/beings as circular `blobs` of specified
             color and size. Default values are for `obstacles`.
         """
@@ -30,7 +30,8 @@ class Blob(pg.sprite.Sprite):
         # handle health
         if health != None:
             self.health = health
-            self.max_health = health + 5
+        if max_health != None:
+            self.max_health = max_health
 
     def get_loc(self):
         return (self.rect.center[0] + self.move[0], self.rect.center[1] + self.move[1])
@@ -45,12 +46,12 @@ class Blob(pg.sprite.Sprite):
         return (out_x,out_y)
 
 class Creature():
-    def __init__(self,health,sprite_list,sc_width,sc_height,sc_rect,color,bg,group):
+    def __init__(self,health,max_health,sprite_list,sc_width,sc_height,sc_rect,color,bg,group):
         # self.group = pg.sprite.Group()
         # self.health = health
         # self.max_health = health + 5
         self.movement = [-1,-2,2,-1.5,1.5,-3,3,1]
-        self.body = Blob(color,13,bg,(choice(self.movement),choice(self.movement)),health)
+        self.body = Blob(color,13,bg,(choice(self.movement),choice(self.movement)),health,max_health)
         # self.group.add(self.body)
         # self.move = self.body.move
         self.counter = 0
@@ -75,14 +76,14 @@ class Creature():
             self.body.rect.move_ip(self.body.move[0]*back,self.body.move[1]*back)
 
     def bad(self):
-        print("'OW!'")
+        # print("'OW!'")
         self.body.health -= 1
         self.bad_pixels.append((self.body.rect.center[0],self.body.rect.center[1]))
         self.now_move(True,-3)
 
     def hungery(self,loc,all_sprites,known):
         self.hunger = True
-        print("'HAAAAAAAALP!!!'")
+        # print("'HAAAAAAAALP!!!'")
         dist = (loc[0]-self.body.rect.center[0],loc[1]-self.body.rect.center[1])
         new = self.body.conv_to_move(dist,-400,400,-4,4)
         # print("Moving:\n", new*3)
@@ -93,7 +94,7 @@ class Creature():
         self.now_move()
         self.counter = 0
 
-def init_all(all_sprites_list,name,group,color,number,l_size,screen_width,screen_height,screen_rect,bgc,health=None,move=None):
+def init_all(all_sprites_list,name,group,color,number,l_size,screen_width,screen_height,screen_rect,bgc,health=None,move=None,max_health=None):
     for _ in range(number):
         if len(l_size) > 1:
             size = choice(l_size)
@@ -103,7 +104,7 @@ def init_all(all_sprites_list,name,group,color,number,l_size,screen_width,screen
             movement = (choice(move),choice(move))
         else:
             movement = None
-        name = Blob(color,size,bgc,movement,health)
+        name = Blob(color,size,bgc,movement,health,max_health)
         name.rect.center = (randrange(screen_width), randrange(screen_height))
         while pg.sprite.spritecollide(name,all_sprites_list,False,pg.sprite.collide_circle):
             name.rect.center = (randrange(screen_width), randrange(screen_height))
