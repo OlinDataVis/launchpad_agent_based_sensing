@@ -2,11 +2,11 @@
     Simulating the existance and usage of only one sense.
     Author: Lydia Hodges
 """
-
+### Setup Coding Environment ###
 import pygame as pg
 from random import choice, randrange, uniform
 from math import atan2, sqrt
-import time
+from time import clock, perf_counter
 import bio_sprites
 from game_mech import Game
 
@@ -20,22 +20,18 @@ def conv_sec_min(time_in_sec):
     remaining_sec = time_in_sec - min_to_sec
     return (int(fract_min),int(remaining_sec))
 
-# def conv_to_move(dist,i_start=-23,i_end=23,o_start=-1,o_end=1):
-#     in_range = i_end - i_start
-#     out_range = o_end - o_start
-#     in_x = dist[0] - i_start
-#     in_y = dist[1] - i_start
-#     out_x = ((in_x / in_range) * out_range) + o_start
-#     out_y = ((in_y / in_range) * out_range) + o_start
-#     return (out_x,out_y)
 
-def main(num_c, num_o, num_e, num_f):
+
+### Initialize Main Function, Where Everything Happens ###
+def main(num_prey, num_pred, num_o, num_f):
     """ Main function that runs everything """
+    # initialize pygame and the main display
     pg.init()
     game = Game(screen_width,screen_height)
 
     # initialize lists (pygame Groups) for all sprites
     all_prey = []
+    all_pred = []
     prey_list = pg.sprite.Group()
     obstacle_list = pg.sprite.Group()
     predator_list = pg.sprite.Group()
@@ -44,129 +40,112 @@ def main(num_c, num_o, num_e, num_f):
     all_sprites_list = pg.sprite.Group()
 
     # initialize obstacles
-    obstacle = None
     o_size = [15, 20, 30, 40]
-    bio_sprites.init_all(all_sprites_list,obstacle,obstacle_list,game.BROWN,num_o,o_size,screen_width,screen_height,game.rect,game.BLACK)
+    for _ in range(num_o):
+        size = choice(o_size)
+        obstacle = bio_sprites.Stationary(size,game.BROWN,game.BLACK,obstacle_list,all_sprites_list,screen_width,screen_height,game.rect)
 
     # initialize food
-    food = None
     f_size = [5]
-    bio_sprites.init_all(all_sprites_list,food,food_list,game.GREEN,num_f,f_size,screen_width,screen_height,game.rect,game.BLACK)
-    for food in food_list:
-        food.ate = False
+    for _ in range(num_f):
+        food = bio_sprites.Stationary(5,game.GREEN,game.BLACK,food_list,all_sprites_list,screen_width,screen_height,game.rect,True)
 
     # initialize predators
-    predator = None
-    e_movement = [-1,-2,1,2]
+    pred_movement = [-1,-2,1,2]
     e_size = [25]
-    bio_sprites.init_all(all_sprites_list,predator,predator_list,game.RED,num_e,e_size,screen_width,screen_height,game.rect,game.BLACK,25,e_movement,30)
-    for predator in predator_list:
-        predator.hurt = (False,None)
-        predator.age = 0
-        predator.counter = time.clock()
+    for _ in range(num_pred):
+        predator = bio_sprites.Creature(25,30,25,pred_movement,game.RED,game.BLACK,predator_list,all_sprites_list,screen_width,screen_height,game.rect,True)
+        all_pred.append(predator)
 
     # initialize prey
-    for _ in range(num_c):
-        prey = bio_sprites.Creature(10,15,all_sprites_list,screen_width,screen_height,game.rect,game.BLUE,game.BLACK,prey_list)
+    prey_movement = [-1,-2,2,-1.5,1.5,-3,3,1]
+    for _ in range(num_prey):
+        prey = bio_sprites.Creature(10,15,13,prey_movement,game.BLUE,game.BLACK,prey_list,all_sprites_list,screen_width,screen_height,game.rect)
         all_prey.append(prey)
 
 
-    ### Main Action ###
+
+    ### Main Action, Still Within Main Function ###
     print("Start Simulation")
-    h_counter = 0
-    dead = False
-    done = False
-    init_time = time.perf_counter()
+    h_counter = 0 # counter for health reduction, also used for a couple other things
+    done = False # used to terminate the while loop
+    init_time = perf_counter() # set start time so as to time the simluation
     while not done:
         for event in pg.event.get():
-            if event.type == pg.QUIT:
+            if event.type == pg.QUIT: # hitting the 'X' button at hte top of the pygame display
                 done = True
 
         # initialize display
-        game.reset()
+        game.reset() # recolor the display so that you don't see previous frames
 
         # reset food
         for eaten in eaten_food:
-            if time.clock() - eaten.start >= 60:
+            if clock() - eaten.start >= 60:
                 eaten_food.remove(eaten)
-                # food_list.add(eaten)
-                # all_sprites_list.add(eaten)
-                food = bio_sprites.Blob(game.GREEN,5,game.BLACK)
-                food.rect.center = (randrange(screen_width), randrange(screen_height))
-                while pg.sprite.spritecollide(food,all_sprites_list,False,pg.sprite.collide_circle):
-                    food.rect.center = (randrange(screen_width), randrange(screen_height))
-                food.rect.clamp_ip(game.screen_rect)
-                food.ate = False
-                food_list.add(food)
-                all_sprites_list.add(food)
+                food = bio_sprites.Stationary(5,game.GREEN,game.BLACK,food_list,all_sprites_list,screen_width,screen_height,game.rect,True)
 
-        # movement logic for predators
-        for predator in predator_list:
+
+
+        ### Logic for Predators ###
+        # movement and avoidance
+        for predator in all_pred:
             other_list = predator_list.copy()
             other_list.remove(predator)
             e_is_touching = False
             if pg.sprite.spritecollide(predator,obstacle_list,False,pg.sprite.collide_circle):
                 e_is_touching = True
-            if time.clock() - predator.counter >= 2:
-                predator.move = (choice(e_movement),choice(e_movement))
-                predator.counter = time.clock()
+            if clock() - predator.time >= 2:
+                predator.move = (choice(predator.movement),choice(predator.movement))
+                predator.time = clock()
             if e_is_touching == False:
                 predator.rect.move_ip(predator.move[0],predator.move[1])
             elif e_is_touching == True:
                 predator.rect.move_ip(predator.move[0]*-1,predator.move[1]*-1)
-                predator.move = (choice(e_movement),choice(e_movement))
-                predator.counter = time.clock()
-            # `friendly` logic
+                predator.move = (choice(predator.movement),choice(predator.movement))
+                predator.time = clock()
+
+            # interaction with other predators
             if pg.sprite.spritecollide(predator,other_list,False,pg.sprite.collide_circle):
                 other = pg.sprite.spritecollideany(predator,other_list,pg.sprite.collide_circle)
                 interaction = uniform(0,1)
-                if interaction < 0.5:
-                    # print("'Yay...'")
-                    baby = bio_sprites.Blob(game.RED,25,game.BLACK,(choice(e_movement),choice(e_movement)),15,predator.max_health+1)
-                    baby.rect.center = (randrange(screen_width), randrange(screen_height))
-                    while pg.sprite.spritecollide(baby,all_sprites_list,False,pg.sprite.collide_circle):
-                        baby.rect.center = (randrange(screen_width), randrange(screen_height))
-                    baby.rect.clamp_ip(game.screen_rect)
-                    predator_list.add(baby)
-                    all_sprites_list.add(baby)
-                    baby.hurt = (False,None)
-                    baby.counter = time.clock()
-                    baby.age = 0
+                if interaction < 0.5 and len(all_pred)<50:
+                    baby = bio_sprites.Creature(25,predator.max_health+1,25,pred_movement,game.RED,game.BLACK,predator_list,all_sprites_list,screen_width,screen_height,game.rect,True)
+                    all_pred.append(baby)
                     predator.health -= 2
                     other.health -= 2
                 else:
                     lose = uniform(0,1)
                     if lose >= 0.5:
-                        # print("'Ouch...'")
                         predator.health -= 3
                         other.health += 1
                     else:
-                        # print("'VICTORY!'")
                         predator.health += 1
                         other.health -= 3
                 predator.rect.move_ip(predator.move[0]*-2,predator.move[1]*-2)
-                predator.move = (choice(e_movement),choice(e_movement))
-                predator.counter = time.clock()
+                predator.move = (choice(predator.movement),choice(predator.movement))
+                predator.time = clock()
+
             # stay in screen
             if not game.rect.contains(predator.rect):
                 predator.rect.move_ip(predator.move[0]*-2,predator.move[1]*-2)
-                predator.move = (choice(e_movement),choice(e_movement))
-                predator.counter = time.clock()
-            # eating logic
+                predator.move = (choice(predator.movement),choice(predator.movement))
+                predator.time = clock()
+
+            # interaction with prey
             if predator.hurt[0] == True and predator.hurt[1] in prey_list:
                 c = predator.hurt[1]
                 dist = ((c.rect.center[0]-predator.rect.center[0]),(c.rect.center[1]-predator.rect.center[1]))
                 new = predator.conv_to_move(dist)
                 predator.move = (new[0]*3,new[1]*3)
                 predator.hurt = (False,None)
-                predator.counter = time.clock()
+                predator.time = clock()
             elif predator.hurt[0] == True and predator.hurt[1] not in prey_list:
-                # print("'NOMNOM'")
                 if predator.health <= predator.max_health-1:
                     predator.health += 2
                 elif predator.health >= predator.max_health:
                     predator.health += 1
                 predator.hurt = (False,None)
+
             # death logic
             if h_counter % 50 == 0:
                 predator.health -= 1
@@ -176,123 +155,124 @@ def main(num_c, num_o, num_e, num_f):
             if predator.health <= 0:
                 predator.kill()
 
-        # movement logic for prey
+
+
+        ### Logic for Prey ###
+        # movement and avoidance
         for prey in all_prey:
             other_list = prey_list.copy()
-            other_list.remove(prey.body)
+            other_list.remove(prey)
             c_is_touching = False
-            if pg.sprite.spritecollide(prey.body,obstacle_list,False,pg.sprite.collide_circle):
+            if pg.sprite.spritecollide(prey,obstacle_list,False,pg.sprite.collide_circle):
                 c_is_touching = True
-            if c_is_touching == False and prey.counter >= 50 and prey.hunger == False:
-                choose = prey.movement.copy()
-                if prey.body.move[0] in choose and prey.body.move[1] in choose:
-                    if prey.body.move[0] == prey.body.move[1]:
-                        choose.remove(prey.body.move[0])
-                    else:
-                        choose.remove(prey.body.move[0])
-                        choose.remove(prey.body.move[1])
-                prey.body.move = (choice(choose),choice(choose))
-                while prey.body.get_loc() in prey.bad_pixels:
-                    # print("'Nope!'")
-                    prey.body.move = (choice(choose),choice(choose))
+            if c_is_touching == False and prey.counter >= 50 and prey.hunger == False: # change it's velocities and move
+                choose = prey.movement.copy() # this chunk is to remove the current velocities to ensure the new direction will not be the same as the previous one
+                if prey.move[0] in choose and prey.move[1] in choose: #
+                    if prey.move[0] == prey.move[1]: #
+                        choose.remove(prey.move[0]) #
+                    else: #
+                        choose.remove(prey.move[0]) #
+                        choose.remove(prey.move[1]) #
+                prey.move = (choice(choose),choice(choose))
+                while prey.get_loc() in prey.bad_pixels: # avoid places where it has been attacked by a predator before
+                    prey.move = (choice(choose),choice(choose))
                 prey.now_move()
                 prey.counter = 0
-            elif c_is_touching == False and prey.counter < 50 and prey.hunger == False:
-                while prey.body.get_loc() in prey.bad_pixels:
-                    # print("'Nope!'")
-                    prey.body.move = (choice(choose),choice(choose))
+            elif c_is_touching == False and prey.counter < 50 and prey.hunger == False: # normal movement
+                while prey.get_loc() in prey.bad_pixels: # avoid places where it has been attacked by a predator before
+                    prey.move = (choice(choose),choice(choose))
                 prey.now_move()
-            elif prey.hunger == True:
-                while prey.body.get_loc() in prey.bad_pixels:
-                    # print("'Nope!'")
-                    prey.body.move = (choice(choose),choice(choose))
+            elif prey.hunger == True: # health is low, go to where it knows it has touched food but didn't eat it previously
+                while prey.get_loc() in prey.bad_pixels: # avoid places where it has been attacked by a predator before
+                    prey.move = (choice(choose),choice(choose))
                 prey.now_move()
-            else:
+            else: # touching a predator, so move back and change velocities
                 prey.now_move(True)
                 prey.counter = 50
-            prey.body.rect.clamp_ip(game.rect)
-            # `friendly` logic
-            if pg.sprite.spritecollide(prey.body,other_list,False,pg.sprite.collide_circle):
-                other = pg.sprite.spritecollideany(prey.body,other_list,pg.sprite.collide_circle)
-                if other.health >= 2 and prey.body.health >= 2:
+
+            # stay in screen
+            if not game.rect.contains(prey.rect):
+                prey.rect.move_ip(prey.move[0]*-2,prey.move[1]*-2)
+                prey.move = (choice(prey.movement),choice(prey.movement))
+                prey.counter = 0
+
+            # interaction with other prey
+            if pg.sprite.spritecollide(prey,other_list,False,pg.sprite.collide_circle):
+                other = pg.sprite.spritecollideany(prey,other_list,pg.sprite.collide_circle)
+                if other.health >= 2 and prey.health >= 2:
                     mate_chance = uniform(0,1)
-                    if mate_chance >= 0.4 and len(all_prey)<=100:
-                        # print("'Yay!'")
-                        baby = bio_sprites.Creature(5,prey.body.max_health+1,all_sprites_list,screen_width,screen_height,game.rect,game.BLUE,game.BLACK,prey_list)
+                    if mate_chance >= 0.4 and len(all_prey)<50:
+                        baby = bio_sprites.Creature(10,prey.max_health+1,13,prey_movement,game.BLUE,game.BLACK,prey_list,all_sprites_list,screen_width,screen_height,game.rect)
                         all_prey.append(baby)
                         other.health -= 2
-                        prey.body.health -= 2
-                    # else:
-                        # print("'Eww...'")
-                    prey.body.move = (choice(prey.movement),choice(prey.movement))
-                while prey.body.get_loc() in prey.bad_pixels:
-                    # print("'Nope!'")
-                    prey.body.move = (choice(prey.movement),choice(prey.movement))
+                        prey.health -= 2
+                    prey.move = (choice(prey.movement),choice(prey.movement))
+                while prey.get_loc() in prey.bad_pixels:
+                    prey.move = (choice(prey.movement),choice(prey.movement))
                 prey.now_move()
                 prey.counter = 0
-            # eating logic
-            if prey.body.health < prey.body.max_health and pg.sprite.spritecollide(prey.body,food_list,False,pg.sprite.collide_circle):
-                food = pg.sprite.spritecollideany(prey.body,food_list,pg.sprite.collide_circle)
-                # food = food[0]
+
+            # interaction with food
+            if prey.health < prey.max_health and pg.sprite.spritecollide(prey,food_list,False,pg.sprite.collide_circle):
+                food = pg.sprite.spritecollideany(prey,food_list,pg.sprite.collide_circle)
                 eaten_food.add(food)
                 food_list.remove(food)
                 all_sprites_list.remove(food)
                 food.ate = True
-                food.start = time.clock()
+                food.start = clock()
                 if food.rect.center in prey.known_food:
-                    # print("'Got it'")
                     prey.known_food.remove(food.rect.center)
-                if prey.body.health <= prey.body.max_health-2:
-                    prey.body.health += 2
-                elif prey.body.health == prey.body.max_health-1:
-                    prey.body.health += 1
-            elif prey.body.health >= prey.body.max_health and pg.sprite.spritecollide(prey.body,food_list,False,pg.sprite.collide_circle):
-                food = pg.sprite.spritecollideany(prey.body,food_list,pg.sprite.collide_circle)
+                if prey.health <= prey.max_health-2:
+                    prey.health += 2
+                elif prey.health == prey.max_health-1:
+                    prey.health += 1
+            elif prey.health >= prey.max_health and pg.sprite.spritecollide(prey,food_list,False,pg.sprite.collide_circle):
+                food = pg.sprite.spritecollideany(prey,food_list,pg.sprite.collide_circle)
                 if food.ate == False and food.rect.center not in prey.known_food:
                     prey.known_food.append(food.rect.center)
+
             # death logic
-            if pg.sprite.spritecollide(prey.body,predator_list,False,pg.sprite.collide_circle):
-                # print("'OW!'")
-                predator = pg.sprite.spritecollideany(prey.body,predator_list,pg.sprite.collide_circle)
-                predator.hurt = (True,(prey.body))
+            if pg.sprite.spritecollide(prey,predator_list,False,pg.sprite.collide_circle):
+                predator = pg.sprite.spritecollideany(prey,predator_list,pg.sprite.collide_circle)
+                predator.hurt = (True,(prey))
                 if predator.health <= predator.max_health-2:
                     predator.health += 2
                 elif predator.health <= predator.max_health-1:
                     predator.health += 1
-                prey.body.health -= 2
+                prey.health -= 2
                 prey.bad()
                 prey.counter = 50
             if h_counter % 50 == 0:
-                prey.body.health -= 1
+                prey.health -= 1
                 prey.age += 1
             if prey.age >= 30:
-                prey.body.kill()
+                prey.kill()
                 all_prey.remove(prey)
                 continue
-            if prey.body.health <= 0:
-                prey.body.kill()
+            if prey.health <= 0:
+                prey.kill()
                 all_prey.remove(prey)
                 continue
-            # hunting logic
-            elif prey.body.health <= prey.body.max_health/2 and prey.known_food:
+
+            # hunting logic, continuing from if statement above
+            elif prey.health <= prey.max_health/2 and prey.known_food:
                 all_dists = []
-                # print("Food List:\n", known_food)
                 for location in prey.known_food:
-                    dist = ((location[0]-prey.body.rect.center[0]),(location[1]-prey.body.rect.center[1]))
+                    dist = ((location[0]-prey.rect.center[0]),(location[1]-prey.rect.center[1]))
                     all_dists.append(dist)
                 min_d = min(all_dists)
                 i = all_dists.index(min_d)
                 loc = prey.known_food[i]
-                # if prey.body.rect.center == loc:
-                #     known_food.remove(loc)
-                # print("Going to:\n", loc, "From:\n", prey.body.rect.center)
                 prey.hungery(loc,all_sprites_list,prey.known_food)
             else:
                 prey.hunger = False
 
             prey.counter += 1
 
-        # show numbers
+
+
+        ### Update Display ###
+        # show number of predators and prey
         prey_text = pg.font.SysFont('monospace', 14)
         prey_surf = prey_text.render("Prey="+str(len(all_prey)),True,game.WHITE)
         prey_rect = prey_surf.get_rect()
@@ -310,25 +290,32 @@ def main(num_c, num_o, num_e, num_f):
         game.screen.blit(prey_surf,prey_rect)
         game.screen.blit(predator_surf,predator_rect)
         pg.display.flip()
-        if not all_prey and not predator_list:
-            break
+        if not all_prey and not predator_list: # if all predators and prey are dead, exit the simulation
+            done = True
+
         # set max fps to 50
         game.clock.tick(50)
-        # prey.counter += 1
         h_counter += 1
         if h_counter == 1:
             pg.image.save(game.screen,"Extraneous/0start_game.png")
-    end_time = time.perf_counter()
+
+
+
+    ### End Simulation ###
+    # final update for end-of-simulation image
+    end_time = perf_counter()
     all_sprites_list.draw(game.screen)
     game.screen.blit(prey_surf,prey_rect)
     game.screen.blit(predator_surf,predator_rect)
     pg.display.flip()
     pg.image.save(game.screen,"Extraneous/0end_game.png")
-    pg.quit()
-    # if dead == True:
-    if not all_prey or not predator_list:
+    pg.quit() # stop pygame
+    if not all_prey or not predator_list: # if either all predators or prey are dead, consider the simulation complete and get the time
         elapsed_time = conv_sec_min(end_time-init_time)
         print("Simulation Complete\nScore:", elapsed_time[0], "minutes", elapsed_time[1], "seconds")
 
+
+
+### Run Simulation from the Terminal ###
 if __name__ == "__main__":
-    main(15, 50, 13, 1000)
+    main(15, 13, 50, 1000)
