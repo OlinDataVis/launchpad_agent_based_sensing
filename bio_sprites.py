@@ -47,13 +47,8 @@ class Blob(pg.sprite.Sprite):
 
 class Creature():
     def __init__(self,health,max_health,sprite_list,sc_width,sc_height,sc_rect,color,bg,group):
-        # self.group = pg.sprite.Group()
-        # self.health = health
-        # self.max_health = health + 5
         self.movement = [-1,-2,2,-1.5,1.5,-3,3,1]
         self.body = Blob(color,13,bg,(choice(self.movement),choice(self.movement)),health,max_health)
-        # self.group.add(self.body)
-        # self.move = self.body.move
         self.counter = 0
         self.hunger = False
         self.bad_pixels = []
@@ -65,10 +60,6 @@ class Creature():
         self.age = 0
         group.add(self.body)
         sprite_list.add(self.body)
-        # self.states = ["EXPLORE", "EVADE", "HUNT"]
-
-    # def get_loc(self):
-    #     return (self.body.rect.center[0] + self.body.move[0], self.body.rect.center[1] + self.body.move[1])
 
     def now_move(self, run=False, back=-1):
         if run == False:
@@ -77,17 +68,14 @@ class Creature():
             self.body.rect.move_ip(self.body.move[0]*back,self.body.move[1]*back)
 
     def bad(self):
-        # print("'OW!'")
         self.body.health -= 1
         self.bad_pixels.append((self.body.rect.center[0],self.body.rect.center[1]))
         self.now_move(True,-3)
 
     def hungery(self,loc,all_sprites,known):
         self.hunger = True
-        # print("'HAAAAAAAALP!!!'")
         dist = (loc[0]-self.body.rect.center[0],loc[1]-self.body.rect.center[1])
         new = self.body.conv_to_move(dist,-400,400,-4,4)
-        # print("Moving:\n", new*3)
         if 0 < new[0]*3 < 1 or -1 < new[0]*3 < 0:
             if  0 < new[1]*3 < 1 or -1 < new[1]*3 < 0:
                 known.remove(loc)

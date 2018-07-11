@@ -317,13 +317,13 @@ def main(num_c, num_o, num_e, num_f):
         # prey.counter += 1
         h_counter += 1
         if h_counter == 1:
-            pg.image.save(game.screen,"0start_game.png")
+            pg.image.save(game.screen,"Extraneous/0start_game.png")
     end_time = time.perf_counter()
     all_sprites_list.draw(game.screen)
     game.screen.blit(prey_surf,prey_rect)
     game.screen.blit(predator_surf,predator_rect)
     pg.display.flip()
-    pg.image.save(game.screen,"0end_game.png")
+    pg.image.save(game.screen,"Extraneous/0end_game.png")
     pg.quit()
     # if dead == True:
     if not all_prey or not predator_list:
