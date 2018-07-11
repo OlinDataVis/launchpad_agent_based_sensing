@@ -7,7 +7,7 @@ from random import choice, randrange
 from time import clock
 
 class Blob(pg.sprite.Sprite):
-    def __init__(self, color, diameter, bgc, move=None, health=None, max_health=None):
+    def __init__(self, color, diameter, bgc):
         """ Initialize all objects/beings as circular `blobs` of specified
             color and size. Default values are for `obstacles`.
         """
@@ -26,13 +26,6 @@ class Blob(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         # set the radius for the sprite -- this will be used for circle collision
         self.radius = diameter/2
-        if move != None:
-            self.move = move
-        # handle health
-        if health != None:
-            self.health = health
-        if max_health != None:
-            self.max_health = max_health
 
     def conv_to_move(self,dist,i_start=-23,i_end=23,o_start=-1,o_end=1):
         in_range = i_end - i_start
@@ -45,8 +38,10 @@ class Blob(pg.sprite.Sprite):
 
 class Creature(Blob):
     def __init__(self,health,max_health,size,movement,color,bg,group,sprite_list,sc_width,sc_height,sc_rect,time=False):
-        super().__init__(color,size,bg,(choice(movement),choice(movement)),health,max_health)
-        # self = Blob(color,size,bg,(choice(movement),choice(movement)),health,max_health)
+        super().__init__(color,size,bg)
+        self.move = (choice(movement),choice(movement))
+        self.health = health
+        self.max_health = max_health
         self.movement = movement
         self.rect.center = (randrange(sc_width), randrange(sc_height))
         while pg.sprite.spritecollide(self,sprite_list,False,pg.sprite.collide_circle):
@@ -100,21 +95,3 @@ class Stationary():
             self.ate = False
         group.add(self)
         all_sprites.add(self)
-
-# def init_all(all_sprites_list,name,group,color,number,l_size,screen_width,screen_height,screen_rect,bgc,health=None,move=None,max_health=None):
-#     for _ in range(number):
-#         if len(l_size) > 1:
-#             size = choice(l_size)
-#         else:
-#             size = l_size[0]
-#         if move != None:
-#             movement = (choice(move),choice(move))
-#         else:
-#             movement = None
-#         name = Blob(color,size,bgc,movement,health,max_health)
-#         name.rect.center = (randrange(screen_width), randrange(screen_height))
-#         while pg.sprite.spritecollide(name,all_sprites_list,False,pg.sprite.collide_circle):
-#             name.rect.center = (randrange(screen_width), randrange(screen_height))
-#         name.rect.clamp_ip(screen_rect)
-#         group.add(name)
-#         all_sprites_list.add(name)
