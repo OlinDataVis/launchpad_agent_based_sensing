@@ -10,7 +10,6 @@ class Game():
         self.screen = pg.display.set_mode([screen_width, screen_height])
         self.rect = self.screen.get_rect()
         pg.display.set_caption(" Simple Haptic-Only Simulation")
-        self.screen_rect = self.screen.get_rect()
         self.clock = pg.time.Clock()
         self.BLACK = (0, 0, 0)# background color
         self.WHITE = (255,255,255)# text color
