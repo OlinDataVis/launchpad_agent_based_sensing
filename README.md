@@ -8,8 +8,7 @@ This launchpad covers agent-based modeling, using sensory creatures to do so. In
 The creatures in the example have only a single sense with which to interact -- touch. You can change this as part of your extension -- either adding senses or changing the one currently used. An example of this would be giving everything 'auras' to add in smell. You can also change the number of agents (currently two, predator and prey), change the rules of the interactions, create a completely different model/simulation, or anything else that seems relevant to this launchpad. If you're not sure, feel free to ask.
 
 ![Picture of the Start of a Simulation](/Extraneous/0start_game.png)
-
-*This is the first frame of the simulation the dev ended up creating*
+*This is the first frame of the simulation the dev created, which the example is based on*
 
 ## Dependencies
 
