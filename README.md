@@ -7,6 +7,10 @@ This launchpad covers agent-based modeling, using sensory creatures to do so. In
 
 The creatures in the example have only a single sense with which to interact -- touch. You can change this as part of your extension -- either adding senses or changing the one currently used. An example of this would be giving everything 'auras' to add in smell. You can also change the number of agents (currently two, predator and prey), change the rules of the interactions, create a completely different model/simulation, or anything else that seems relevant to this launchpad. If you're not sure, feel free to ask.
 
+![Picture of the Start of a Simulation](/Extraneous/0start_game.png)
+
+*This is the first frame of the simulation the dev ended up creating*
+
 ## Dependencies
 
 Most of the libraries you need should have already been installed (at least if you used Anaconda to install python3). The one that might not have is pygame; to install pygame, type `pip install pygame` into your terminal. Other libraries used are as follows:
@@ -27,10 +31,10 @@ This contains the class `Game`, which is essentially the game screen. It contain
 
 ### Bio_Sprites
 
-This file requires some knowledge of self-defined classes, parent classes, child classes, and inheritance. If you're not too knowledgeable on this, try to follow along, look at the file and see if you can understand what is happening, and do some research.
+This file requires some knowledge of parent classes, child classes, and inheritance. If you're not too knowledgeable on this, look at the file and see if you can understand what is happening, do some research, and ask for help as needed.
 
 This file contains the classes `Blob`, `Creature`, and `Stationary`. `Blob` is a child class of pygame's `Sprite` class, and `Creature` is a child class to `Blob`. `Stationary` is an independent class, but it does call the `Blob` class.
 
 ### Bio_Launchpad
 
-This is the run file. There is some structure included, since the goal of this launchpad is *not* to learn how to use pygame (feel free to explore, though!), but the rest you will be walked through for the example, and then you'll be able to use it (or toss it) however you want for the extension.
+This is the run file. There is some structure provided, since the goal of this launchpad is *not* to learn how to use pygame (feel free to explore, though!), and then you'll be walked through writing some more into this file for the example. After that, you'll be able to use it (or toss it) however you want for the extension.
