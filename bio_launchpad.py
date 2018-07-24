@@ -42,7 +42,7 @@ def main(num_o, num_prey):
     # initialize prey
     prey_movement = [-1,1]
     for _ in range(num_prey):
-        prey = bio_sprites.Creature(10,15,13,prey_movement,game.BLUE,game.BLACK,prey_list,all_sprites_list,screen_width,screen_height,game.rect)
+        prey = bio_sprites.Creature(10,13,prey_movement,game.BLUE,game.BLACK,prey_list,all_sprites_list,screen_width,screen_height,game.rect)
         all_prey.append(prey)
 
 

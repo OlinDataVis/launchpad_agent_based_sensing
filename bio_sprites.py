@@ -27,21 +27,11 @@ class Blob(pg.sprite.Sprite):
         # set the radius for the sprite -- this will be used for circle collision
         self.radius = diameter/2
 
-    def conv_to_move(self,dist,i_start=-23,i_end=23,o_start=-1,o_end=1):
-        in_range = i_end - i_start
-        out_range = o_end - o_start
-        in_x = dist[0] - i_start
-        in_y = dist[1] - i_start
-        out_x = ((in_x / in_range) * out_range) + o_start
-        out_y = ((in_y / in_range) * out_range) + o_start
-        return (out_x,out_y)
-
 class Creature(Blob):
-    def __init__(self,health,max_health,size,movement,color,bg,group,sprite_list,sc_width,sc_height,sc_rect,time=False):
+    def __init__(self,health,size,movement,color,bg,group,sprite_list,sc_width,sc_height,sc_rect,time=False):
         super().__init__(color,size,bg)
         self.move = (choice(movement),choice(movement))
         self.health = health
-        self.max_health = max_health
         self.movement = movement
         self.rect.center = (randrange(sc_width), randrange(sc_height))
         while pg.sprite.spritecollide(self,sprite_list,False,pg.sprite.collide_circle):
@@ -50,39 +40,12 @@ class Creature(Blob):
         self.age = 0
         group.add(self)
         sprite_list.add(self)
-        if time != False:
-            self.hurt = (False,None)
-            self.time = clock()
-        elif time == False:
-            self.counter = 0
-            self.hunger = False
-            self.bad_pixels = []
-            self.known_food = []
 
     def now_move(self, run=False, back=-1):
         if run == False:
             self.rect.move_ip(self.move[0],self.move[1])
         else:
             self.rect.move_ip(self.move[0]*back,self.move[1]*back)
-
-    def bad(self):
-        self.health -= 1
-        self.bad_pixels.append((self.rect.center[0],self.rect.center[1]))
-        self.now_move(True,-3)
-
-    def hungery(self,loc,all_sprites,known):
-        self.hunger = True
-        dist = (loc[0]-self.rect.center[0],loc[1]-self.rect.center[1])
-        new = self.conv_to_move(dist,-400,400,-4,4)
-        if 0 < new[0]*3 < 1 or -1 < new[0]*3 < 0:
-            if  0 < new[1]*3 < 1 or -1 < new[1]*3 < 0:
-                known.remove(loc)
-        self.move = (new[0]*3,new[1]*3)
-        self.now_move()
-        self.counter = 0
-
-    def get_loc(self):
-        return (self.rect.center[0] + self.move[0], self.rect.center[1] + self.move[1])
 
 class Stationary():
     def __init__(self,size,color,bg,group,all_sprites,sc_width,sc_height,sc_rect,decay=False):

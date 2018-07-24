@@ -18,7 +18,11 @@ Most of the libraries you need should have already been installed (at least if y
 * random
 * math
 
-These are just the libraries used for the example.
+These are just the libraries used for the example. You will be responsible for any additional libraries you use, though you can certainly ask for help.
+
+## Resources
+
+The dev tried to include as much of the pygame structuring as possible, but you may want to expand and add to what is being done with pygame, or you might just want to explore pygame more. Here are the resources the dev used for [sprites](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite), [groups](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group), [collision](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.groupcollide) (there's lots on this page that is useful, really), [rects](https://www.pygame.org/docs/ref/rect.html) (especially the move_ip and clamp_ip functions), [display](https://www.pygame.org/docs/ref/display.html), and [surfaces](https://www.pygame.org/docs/ref/surface.html). Also, Google is definitely your friend; there are somethings that are difficult to impossible to do with pygame, but others have found some nice workarounds if you really want to do something specific.
 
 ## Included Files
 
@@ -53,6 +57,23 @@ Once you've gotten a good understanding of what's going on, try to add in some p
 
 Now that you have predators and prey in the same world and interacting simply with each other, it's time to get more complicated -- adding death logic. The best way to do this is to implement health logic. The `Creature` class already provides a health attribute, so now it's time to play around with it. You can change how much health the predators and prey start with, and you can include logic for gaining and losing health. Generally speaking, when a predator and prey interact in the wild, the prey 'loses health' while the predator 'gains health', and when two predators interact either  they both 'lose health' or one of them 'loses health' while the other 'gains health' (gross oversimplification, but we're trying to keep this example fairly simple). Add in some logic to both predators and prey to emulate this, or however you want them to interact (perhaps in your world the prey dominate the predators?). Once you have them losing and gaining health (restricting the number of prey to one and using a print statement for its health is a great way to test this), add in some logic for when both agents die. Do they leave behind a body? Do they simply disappear?
 
-To kill something, you'll need to remove it from the groups it's part of (otherwise it'll still act and interact as if alive). To remove from a pygame Group, you can use `group_name.remove(sprite_name)` for each group, or to remove a sprite from all pygame Groups it is part of use `sprite_name.kill()`. Use `list_name.remove(sprite_name)` to remove from a python list (like `all_prey`). For example, writing `prey.kill()` will remove it from `prey_list` and `all_sprites_list`, meaning it won't be drawn on the screen and won't be counted towards collisions that call `prey_list`, and writing `all_prey.remove(prey)` will remove it from `all_prey` so that it won't be iterated over in the `Prey Logic` section of the main function.
+To kill something, you'll need to remove it from the groups its part of (otherwise it'll still act and interact as if alive). To remove from a pygame Group, you can use `group_name.remove(sprite_name)` for each group, or to remove a sprite from all pygame Groups it is part of use `sprite_name.kill()`. Use `list_name.remove(sprite_name)` to remove from a python list (like `all_prey`). For example, writing `prey.kill()` will remove it from `prey_list` and `all_sprites_list`, meaning it won't be drawn on the screen and won't be counted towards collisions that call `prey_list`, and writing `all_prey.remove(prey)` will remove it from `all_prey` so that it won't be iterated over in the `Prey Logic` section of the main function.
 
 You might also want to include some logic to end the simulation is all of either one or both agents is dead. For example, if you want to end the simulation when all the prey die, if you have been removing the prey from `prey_list` when they die then you can check the length of `prey_list`, and if it is length 0 have the simulation end. Can you figure out how to have the simulation end automatically? (Hint: look at the `while` loop)
+
+### Food
+
+Depending on what logic you have chosen to implement thus far, the prey may or may not have a way to 'gain health'. It would be good if our little blue friends stood a chance of outliving the predators, though, wouldn't it? No? At least pose more of a challenge? Whether you care for the little blue guys or not, we're adding some food for them. One of doing this is to add food as another stationary agent. So, take a look at how the obstacles are initialized using the `Stationary` class (and don't forget to initialize a `food_list`), create some food,, and add some logic for it. The dev would recommend adding this logic to the prey loop rather than creating a separate loop for the food. Some things to consider: Are there different types of food (should probably start off with just one)? How much health do they give the prey? Do the prey just keep eating, or do they get full at some point? Do the predators interact with the food at all, or just ignore it?
+
+## Finally
+
+That's the end of the guided example! You should have something similar to what the dev created (and you might have similar, interesting results like the one below).
+![Picture of the End of a Simulation](/Extraneous/0end_game.png)
+
+The dev also included things loss of health over time, age and dieing of old age, regenerating food, mating between prey-prey and predator-predator, fighting between predator-predator (random, weighted chance to either fight or mate), an increase in max health each generation, predators chasing prey, and some other things. If you go back far enough in the version history of the OlinDataVis/launchpad_agent_based_sensing repo, you should be able to find the original code (all three starter files were modified) if you really want to see it.
+
+## Extension Time!
+
+Whether you chose to look at the dev's final code or not, that cannot be your final product. It's time for you to take agent-based modeling wherever you want it to go! You can extend the example to include more things and maybe change some of the logic, add in more creatures, or whatever you can think of, you can use the example as a rough guide for something similar, but in your own world, or you can completely scrap the example and go off on your own (though this will likely require greater knowledge and exploration of pygame). Whatever you choose to do, keep it reasonable to the time frame! You have other classes, other work, even other work for this class, so do enjoy yourself, but try not to over scope.
+
+Have fun!
