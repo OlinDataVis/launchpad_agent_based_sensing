@@ -11,6 +11,7 @@ class Game():
         self.rect = self.screen.get_rect()
         pg.display.set_caption(" Simple Agent-Based, Haptic-Only Simulation")
         self.clock = pg.time.Clock()
+        """ These colors are included for convenience """
         self.BLACK = (0, 0, 0)# background color
         self.WHITE = (255,255,255)# text color
         self.BLUE = (0, 0, 255)# `creature` color
