@@ -70,7 +70,7 @@ Depending on what logic you have chosen to implement thus far, the prey may or m
 That's the end of the guided example! You should have something similar to what the dev created (and you might have similar, interesting results like the one below).
 ![Picture of the End of a Simulation](/Extraneous/0end_game.png)
 
-The dev also included things loss of health over time, age and dieing of old age, regenerating food, mating between prey-prey and predator-predator, fighting between predator-predator (random, weighted chance to either fight or mate), an increase in max health each generation, predators chasing prey, and some other things. If you go back far enough in the version history of the OlinDataVis/launchpad_agent_based_sensing repo, you should be able to find the original code (all three starter files were modified) if you really want to see it.
+The dev also included things like loss of health over time, age and dieing of old age, regenerating food, mating between prey-prey and predator-predator, fighting between predator-predator (random, weighted chance to either fight or mate), an increase in max health each generation, predators chasing prey, and some other things. If you go back far enough in the version history of the OlinDataVis/launchpad_agent_based_sensing repo, you should be able to find the original code (all three starter files were modified) if you really want to see it.
 
 ## Extension Time!
 
