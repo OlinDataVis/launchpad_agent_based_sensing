@@ -1,0 +1,9 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*$py.class
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Project Specific Folder
+Extraneous/
