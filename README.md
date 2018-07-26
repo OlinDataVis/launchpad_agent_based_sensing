@@ -3,8 +3,10 @@ Base page for the Agent-Based Sensory Creatures Launchpad
 
 ## Overview
 
-![Picture of the Start of a Simulation](/Extraneous/0start_game.png)
-*This is the first frame of the simulation the dev created, which the example is based on.*
+<p align="center">
+  <img src="/Extraneous/0start_game.png" alt="Picture of the Start of a Simulation"><br>
+  <i>This is the first frame of the simulation the dev created, which the example is based on.</i>
+</p>
 
 This launchpad covers agent-based modeling, using sensory creatures to do so. In agent-based modeling, you have any number of 'agents', usually groups of similar things such as products or creatures, and by giving each agent it's own rules, you can observe how these agents interact with each other, with their environment (if you give them one), and anything else you provide them rules for. In this way you can model different situations and senarios and see what would come of them.
 
@@ -45,7 +47,10 @@ This is the run file. There is some structure provided, since the goal of this l
 ## To work!
 
 The provided code will actually run, so go ahead and do so after reading through it to see what it looks like! It should give you something like this:
-![Picture of Basic Simulation](/Extraneous/minimal_game.png)
+
+<p align="center">
+  <img src="/Extraneous/minimal_game.png" alt="Picture of Basic Simulation">
+</p>
 
 Go ahead and play around with what has been provided and see what you can do. Something a little fun to do is comment out the line that says `game.reset()`; this prevents the simulation from clearing the screen each frame, so you can get some cool effects! You can also change the number of prey and uncomment the lines that will allow multiple prey to interact with each other.
 
@@ -69,7 +74,9 @@ Depending on what logic you have chosen to implement thus far, the prey may or m
 
 That's the end of the guided example! You should have something similar to what the dev created (and you might have similar, interesting results like the one below).
 
-![Picture of the End of a Simulation](/Extraneous/bio_gif.gif)
+<p align="center">
+  <img src="/Extraneous/bio_gif.gif" alt="GIF of the End of a Simulation">
+</p>
 
 The dev also included things like loss of health over time, age and dieing of old age, regenerating food, mating between prey-prey and predator-predator, fighting between predator-predator (random, weighted chance to either fight or mate), an increase in max health each generation, predators chasing prey, and some other things. If you go back far enough in the version history of the OlinDataVis/launchpad_agent_based_sensing repo, you should be able to find the original code (all three starter files were modified) if you really want to see it.
 
