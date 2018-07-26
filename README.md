@@ -18,7 +18,9 @@ The creatures in the example have only a single sense with which to interact -- 
 
 Most of the libraries you need should have already been installed (at least if you used Anaconda to install python3). The one that might not have is pygame; to install pygame, type this into your terminal:
 
-```pip install pygame```
+```
+pip install pygame
+```
 
 You will be responsible for any additional libraries you use, though you can certainly ask for help.
 
@@ -56,7 +58,19 @@ Go ahead and play around with what has been provided and see what you can do. So
 
 ### Predators
 
-Once you've gotten a good understanding of what's going on, try to add in some predators. You'll need to start by creating groups using `pg.sprite.Group()`, and then you'll need to create the predators using the `Creature` class, similar to the prey. You'll have to decide what size to make them and what movement to allow them, and also what color to assign them (would recommend `game.RED`). It's recommended you try running the simulation frequently to make sure everything is working, so it would be a good idea to give the predators the same logic as the prey to start and just see if they appear on the screen and move. From there, you can add more complicated movement and avoidance logic, e.g. what does a prey do when it touches a predator?
+Once you've gotten a good understanding of what's going on, try to add in some predators. You'll need to start by creating a group using `pg.sprite.Group()` much like `prey_list` on line 34, and then you'll need to create the predators using the `Creature` class, similar to the prey on lines 44-45. The `Group` you create is a pygame structure similar to a list; by adding sprites to it (which is done in `bio_sprites.Creature`), the `Group` will allow you to iterate through each sprite and will help keep track of collisions. If you want to see how many predators are present using `len` (e.g. in line 103 using prey), you will need to create a regular python list for the predators and add them to that as well (see lines 33 and 46 for how it was done with the prey). The full initializing code should look something like the following:
+
+```
+all_predators = []
+predators_list = pg.sprites.Groups()
+for _ in range(num_predators):
+    predator = bio_sprites.Creature(health,size,movement,color,background_color,group_name, all_sprites_list,screen_width,screen_height,game.rect)
+    all_predators.append(predator)
+```
+
+*Note: this is a block of code for visualization; this code was actually spread out in the bio_launchpad file, though you can rearrange however you wish*
+
+When initializing the predators with the `Creature` class, you'll have to decide how much health to give them, what size to make them, what movement to allow them, and also what color to assign them (would recommend `game.RED`). `game.rect` is a call to the screen's edges, to keep the predator on-screen. It's recommended you try running the simulation frequently to make sure everything is working, so it would be a good idea to give the predators the same logic as the prey (lines 66-86) to start and just see if they appear on the screen and move. From there, you can add more complicated movement and avoidance logic, e.g. what does a prey do when it touches a predator?
 
 ### Health and Death
 
