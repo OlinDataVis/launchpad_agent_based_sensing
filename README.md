@@ -70,7 +70,7 @@ for _ in range(num_predators):
 
 *Note: this is a block of code for visualization; this code was actually spread out in the bio_launchpad file, though you can rearrange however you wish*
 
-When initializing the predators with the `Creature` class, you'll have to decide how much health to give them, what size to make them, what movement to allow them, and also what color to assign them (would recommend `game.RED`). `game.rect` is a call to the screen's edges, to keep the predator on-screen. It's recommended you try running the simulation frequently to make sure everything is working, so it would be a good idea to give the predators the same logic as the prey (lines 66-86) to start and just see if they appear on the screen and move. From there, you can add more complicated movement and avoidance logic, e.g. what does a prey do when it touches a predator?
+When initializing the predators with the `Creature` class, you'll have to decide how much health to give them, what size to make them, what movement to allow them, and also what color to assign them (would recommend `game.RED`). `game.rect` is a call to the edges of the simulation's display screen, to keep the predator on-screen. It's recommended you try running the simulation frequently to make sure everything is working, so it would be a good idea to give the predators the same logic as the prey (lines 66-86) to start and just see if they appear on the screen and move. From there, you can add more complicated movement and avoidance logic, e.g. what does a prey do when it touches a predator?
 
 ### Health and Death
 
