@@ -3,22 +3,22 @@ Base page for the Agent-Based Sensory Creatures Launchpad
 
 ## Overview
 
-This launchpad covers agent-based modeling, using sensory creatures to do so. In agent-based modeling, you have any number of 'agents', usually groups of similar things such as products or creatures, and by giving each agent it's own rules, you can observe how these agents interact with each other, with their environment (if you give them one), and anything else you provide them rules for. In this way you can model different situations and senarios and see what would come of them.
-
-The creatures in the example have only a single sense with which to interact -- touch. You can change this as part of your extension -- either adding senses or changing the one currently used. An example of this would be giving everything 'auras' to add in smell. You can also change the number of agents (currently two, predator and prey), change the rules of the interactions, create a completely different model/simulation, or anything else that seems relevant to this launchpad. If you're not sure, feel free to ask.
-
 ![Picture of the Start of a Simulation](/Extraneous/0start_game.png)
 *This is the first frame of the simulation the dev created, which the example is based on*
 
-## Dependencies
+This launchpad covers agent-based modeling, using sensory creatures to do so. In agent-based modeling, you have any number of 'agents', usually groups of similar things such as products or creatures, and by giving each agent it's own rules, you can observe how these agents interact with each other, with their environment (if you give them one), and anything else you provide them rules for. In this way you can model different situations and senarios and see what would come of them.
 
-Most of the libraries you need should have already been installed (at least if you used Anaconda to install python3). The one that might not have is pygame; to install pygame, type `pip install pygame` into your terminal. Other libraries used are as follows:
+In the above picture, you can see the beginning of the simulation the dev ended up making. The blue blobs are prey, the red are predators, the green are food (for the prey), and the brown are statioanry obstacles. The dev's simulation including those agents and objects, predator-predator fighting and mating, prey-prey mating, predator-prey damaging, hunting, and eating, prey-food eating, food regeneration, and some slight prey memory of where food is.
 
-* time
-* random
-* math
+The creatures in the example have only a single sense with which to interact -- touch. You can change this as part of your extension -- either adding senses or changing the one currently used. An example of this would be giving everything 'auras' to add in smell. You can also change the number of agents (currently two, predator and prey), change the rules of the interactions, create a completely different model/simulation, or anything else that seems relevant to this launchpad. If you're not sure, feel free to ask.
 
-These are just the libraries used for the example. You will be responsible for any additional libraries you use, though you can certainly ask for help.
+## Dependencies and Installs
+
+Most of the libraries you need should have already been installed (at least if you used Anaconda to install python3). The one that might not have is pygame; to install pygame, type this into your terminal:
+
+```pip install pygame```
+
+You will be responsible for any additional libraries you use, though you can certainly ask for help.
 
 ## Resources
 
@@ -68,7 +68,7 @@ Depending on what logic you have chosen to implement thus far, the prey may or m
 ## Finally
 
 That's the end of the guided example! You should have something similar to what the dev created (and you might have similar, interesting results like the one below).
-![Picture of the End of a Simulation](/Extraneous/0end_game.png)
+![Picture of the End of a Simulation](/Extraneous/bio_gif.gif)
 
 The dev also included things like loss of health over time, age and dieing of old age, regenerating food, mating between prey-prey and predator-predator, fighting between predator-predator (random, weighted chance to either fight or mate), an increase in max health each generation, predators chasing prey, and some other things. If you go back far enough in the version history of the OlinDataVis/launchpad_agent_based_sensing repo, you should be able to find the original code (all three starter files were modified) if you really want to see it.
 
