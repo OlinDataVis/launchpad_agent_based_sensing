@@ -4,14 +4,16 @@
 """
 ### Setup Coding Environment ###
 import pygame as pg
-from random import choice, randrange, uniform
-from math import atan2, sqrt
+import matplotlib.pyplot as plt
+from random import choice
 from time import clock, perf_counter
 import bio_sprites
 from game_mech import Game
 
 screen_width=800
 screen_height=800
+
+plot_time = []
 
 def conv_sec_min(time_in_sec):
     """ Convert time from seconds to minutes and seconds """
@@ -52,6 +54,7 @@ def main(num_o, num_prey):
     game_counter = 0 # counter for every frame, used to take a picture, can be used for other things
     done = False # used to terminate the while loop
     init_time = perf_counter() # set start time so as to time the simluation
+    init_plot_time = perf_counter() # start timer to count time for plotting
     while not done:
         for event in pg.event.get():
             if event.type == pg.QUIT: # hitting the 'X' button at the top of the pygame display
@@ -115,6 +118,9 @@ def main(num_o, num_prey):
         game_counter += 1
         if game_counter == 1:
             pg.image.save(game.screen,"Extraneous/minimal_game.png")
+            plot_time.append(0)
+        else:
+            plot_time.append(perf_counter() - init_plot_time)
 
 
 
@@ -125,6 +131,15 @@ def main(num_o, num_prey):
     elapsed_time = conv_sec_min(end_time-init_time)
     print("Simulation Complete\nScore:", elapsed_time[0], "minutes", elapsed_time[1], "seconds")
 
+    # plotting
+    temporary = [1 for _ in range(len(plot_time))]
+    plt.plot(plot_time,temporary,'g')
+    plt.legend(['temporary'])
+    plt.title("What's this? Hmmmmmmmmmmmmmmm?")
+    plt.xlabel('Time (s)')
+    plt.ylabel('Something or Other')
+    plt.tight_layout()
+    plt.show()
 
 
 ### Run Simulation from the Terminal ###
