@@ -95,7 +95,7 @@ Remember that this is supposed to be agent-based **_modeling_**? We have a nice 
 
 This is a very basic graph of the elapsed time of the simulation plotted against a temporary list of ones (`temporary`) that is the same length as the time list (`plot_time`). Your goal now is to take this starter graph and create a graph showing the relationship of the populations of agents over time. This is similar to [Lotka-Volterra models](https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations), which may have been mentioned in ModSim. In our case, we didn't do a simple mathematical model, we made a simulation to model the predator-prey relationship and are now graphing it so we can see it better. Below is a comparison of a Lotka-Volterra model graph and a graph created by the dev's simulation.
 
-![Lotka-Volterra Example](/Extraneous/lotka_volterra.png) ![Dev Example](/Extraneous/accurate_graph.png)
+![Graph Comparison](/Extraneous/combined_graph.png)
 
 Because Lotka-Volterra models are entirely equation based, they are rather predictable. In our case, we have some quite a bit of randomness, so there's little chance of predicting the outcome of each run, even if you keep the parameters the same. Also, Lotka-Volterra models have some [assumptions](https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations#Physical_meaning_of_the_equations), at least some of which we actually code for and no longer have as assumptions (such as the available food for the prey). The Lotka-Volterra models and equations and definitely useful and good in some situations, so it's good to be aware of them, but keep in mind that we did not recreate the Lotka-Volterra model and so your results could look a lot different (which is also more fun).
 
